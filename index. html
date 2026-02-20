@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ساعة الصلاة</title>
+
+<style>
+body{
+    background:#111;
+    text-align:center;
+    font-family:Arial;
+}
+
+/* اللوغو */
+.clock-box{
+    position:relative;
+    width:420px;
+    margin:auto;
+}
+
+.clock-img{
+    width:100%;
+}
+
+/* العقارب */
+.hand{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform-origin:0% 50%;
+}
+
+/* عقرب ساعة */
+.hour{
+    width:90px;
+    height:6px;
+    background:black;
+}
+
+/* عقرب دقيقة */
+.minute{
+    width:130px;
+    height:4px;
+    background:black;
+}
+
+/* عقرب ثانية */
+.second{
+    width:150px;
+    height:2px;
+    background:red;
+}
+
+/* إطار العد التنازلي */
+.maghrib-box{
+    margin-top:25px;
+    display:inline-block;
+    padding:18px 40px;
+    border-radius:18px;
+    font-size:28px;
+    color:#fff;
+    background:linear-gradient(#caa64b,#8f6b1f);
+    box-shadow:0 0 20px gold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="clock-box">
+
+<img src="background.jpg" class="clock-img">
+
+<div id="h" class="hand hour"></div>
+<div id="m" class="hand minute"></div>
+<div id="s" class="hand second"></div>
+
+</div>
+
+<div class="maghrib-box">
+صلاة المغرب بعد:
+<span id="count"></span>
+</div>
+
+<script>
+
+/* تحديث الساعة */
+
+function updateClock(){
+
+let now=new Date();
+
+let h=now.getHours()%12;
+let m=now.getMinutes();
+let s=now.getSeconds();
+
+let hDeg=(h*30)+(m/2);
+let mDeg=m*6;
+let sDeg=s*6;
+
+document.getElementById("h").style.transform=
+"rotate("+hDeg+"deg)";
+
+document.getElementById("m").style.transform=
+"rotate("+mDeg+"deg)";
+
+document.getElementById("s").style.transform=
+"rotate("+sDeg+"deg)";
+}
+
+/* مثال توقيت المغرب (عدله يومياً أو سنربطه لاحقاً بمواقيت حقيقية) */
+
+let maghribHour=18;
+let maghribMinute=45;
+
+/* العد التنازلي */
+
+function updateCountdown(){
+
+let now=new Date();
+
+let target=new Date();
+
+target.setHours(maghribHour);
+target.setMinutes(maghribMinute);
+target.setSeconds(0);
+
+if(now>target) target.setDate(target.getDate()+1);
+
+let diff=target-now;
+
+let h=Math.floor(diff/1000/60/60);
+let m=Math.floor(diff/1000/60)%60;
+let s=Math.floor(diff/1000)%60;
+
+document.getElementById("count").innerHTML=
+h+"س "+m+"د "+s+"ث";
+}
+
+setInterval(()=>{
+updateClock();
+updateCountdown();
+},1000);
+
+</script>
+
+</body>
+</html>
