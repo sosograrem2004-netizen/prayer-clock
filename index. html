@@ -3,25 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>ساعة الصلاة</title>
 
 <style>
 body{
     background:#111;
     text-align:center;
-    font-family:Arial;
+    font-family:Arial, sans-serif;
+    margin:0;
+    padding:30px;
 }
 
-/* اللوغو */
+/* صندوق الساعة */
 .clock-box{
     position:relative;
     width:420px;
     margin:auto;
 }
 
+/* صورة اللوغو */
 .clock-img{
     width:100%;
+    display:block;
 }
 
 /* العقارب */
@@ -30,39 +33,40 @@ body{
     left:50%;
     top:50%;
     transform-origin:0% 50%;
+    transform:rotate(0deg);
 }
 
-/* عقرب ساعة */
+/* ساعة */
 .hour{
-    width:90px;
+    width:85px;
     height:6px;
     background:black;
 }
 
-/* عقرب دقيقة */
+/* دقيقة */
 .minute{
-    width:130px;
+    width:120px;
     height:4px;
     background:black;
 }
 
-/* عقرب ثانية */
+/* ثانية */
 .second{
-    width:150px;
+    width:140px;
     height:2px;
     background:red;
 }
 
-/* إطار العد التنازلي */
+/* صندوق المغرب */
 .maghrib-box{
-    margin-top:25px;
+    margin-top:30px;
     display:inline-block;
     padding:18px 40px;
-    border-radius:18px;
-    font-size:28px;
-    color:#fff;
-    background:linear-gradient(#caa64b,#8f6b1f);
-    box-shadow:0 0 20px gold;
+    border-radius:20px;
+    font-size:30px;
+    color:white;
+    background:linear-gradient(#d4af37,#8c6a16);
+    box-shadow:0 0 25px gold;
 }
 </style>
 </head>
@@ -71,7 +75,8 @@ body{
 
 <div class="clock-box">
 
-<img src="background.jpg. png" class="clock-img">
+<!-- اسم الصورة الجديد -->
+<img src="background.jpg.png" class="clock-img">
 
 <div id="h" class="hand hour"></div>
 <div id="m" class="hand minute"></div>
@@ -81,48 +86,44 @@ body{
 
 <div class="maghrib-box">
 صلاة المغرب بعد:
-<span id="count"></span>
+<span id="count">...</span>
 </div>
 
 <script>
 
-/* تحديث الساعة */
+/* تحريك الساعة الحقيقية */
 
 function updateClock(){
 
-let now=new Date();
+const now = new Date();
 
-let h=now.getHours()%12;
-let m=now.getMinutes();
-let s=now.getSeconds();
+const h = now.getHours()%12;
+const m = now.getMinutes();
+const s = now.getSeconds();
 
-let hDeg=(h*30)+(m/2);
-let mDeg=m*6;
-let sDeg=s*6;
+const hDeg = h*30 + m*0.5;
+const mDeg = m*6;
+const sDeg = s*6;
 
-document.getElementById("h").style.transform=
-"rotate("+hDeg+"deg)";
-
-document.getElementById("m").style.transform=
-"rotate("+mDeg+"deg)";
-
-document.getElementById("s").style.transform=
-"rotate("+sDeg+"deg)";
+document.getElementById("h").style.transform="rotate("+hDeg+"deg)";
+document.getElementById("m").style.transform="rotate("+mDeg+"deg)";
+document.getElementById("s").style.transform="rotate("+sDeg+"deg)";
 }
 
-/* مثال توقيت المغرب (عدله يومياً أو سنربطه لاحقاً بمواقيت حقيقية) */
+
+/* ضع توقيت المغرب هنا (مؤقت حاليا) */
 
 let maghribHour=18;
 let maghribMinute=45;
+
 
 /* العد التنازلي */
 
 function updateCountdown(){
 
-let now=new Date();
+const now=new Date();
 
 let target=new Date();
-
 target.setHours(maghribHour);
 target.setMinutes(maghribMinute);
 target.setSeconds(0);
@@ -136,8 +137,11 @@ let m=Math.floor(diff/1000/60)%60;
 let s=Math.floor(diff/1000)%60;
 
 document.getElementById("count").innerHTML=
-h+"س "+m+"د "+s+"ث";
+h+" س "+m+" د "+s+" ث";
 }
+
+
+/* تحديث كل ثانية */
 
 setInterval(()=>{
 updateClock();
