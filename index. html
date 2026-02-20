@@ -71,7 +71,7 @@ body{
 
 <div class="clock-box">
 
-<img src="background.jpg" class="clock-img">
+<img src="background.jpg. png" class="clock-img">
 
 <div id="h" class="hand hour"></div>
 <div id="m" class="hand minute"></div>
