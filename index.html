@@ -32,14 +32,11 @@ body{
   width:70%;
   max-width:280px;
   aspect-ratio:1/1;
-}
-
-.clock-img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  display:block;
-  border-radius:10px;
+  border-radius:50%;
+  background:#222;
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
 
 .center{
@@ -51,9 +48,10 @@ body{
 
 .hand{
   position:absolute;
-  left:0;
-  top:0;
+  left:50%;
+  top:50%;
   transform-origin:0% 50%;
+  transform:rotate(0deg);
 }
 
 #h{ width:60px; height:4px; background:black; }
@@ -93,7 +91,6 @@ body{
 <div class="board">
 
   <div class="clock-box">
-    <img src="background.jpg.png" class="clock-img">
     <div class="center">
       <div id="h" class="hand"></div>
       <div id="m" class="hand"></div>
@@ -113,7 +110,7 @@ body{
 function updateClock(){
   const nowUTC = new Date();
 
-  // تحويل التوقيت إلى توقيت الجزائر GMT+1
+  // ضبط توقيت الجزائر GMT+1
   const nowAlgeria = new Date(nowUTC.getTime() + 60*60*1000);
 
   const hours = nowAlgeria.getHours();
@@ -121,16 +118,16 @@ function updateClock(){
   const seconds = nowAlgeria.getSeconds();
   const ms = nowAlgeria.getMilliseconds();
 
-  // حساب دوران العقارب بدقة
+  // دوران العقارب بالوقت الحقيقي
   const hourDeg = (hours % 12) * 30 + minutes * 0.5;
   const minuteDeg = minutes * 6 + seconds * 0.1;
   const secondDeg = seconds * 6 + ms * 0.006;
 
-  document.getElementById("h").style.transform = `rotate(${hourDeg}deg)`;
-  document.getElementById("m").style.transform = `rotate(${minuteDeg}deg)`;
-  document.getElementById("s").style.transform = `rotate(${secondDeg}deg)`;
+  document.getElementById("h").style.transform = `rotate(${hourDeg}deg) translateX(-50%)`;
+  document.getElementById("m").style.transform = `rotate(${minuteDeg}deg) translateX(-50%)`;
+  document.getElementById("s").style.transform = `rotate(${secondDeg}deg) translateX(-50%)`;
 
-  // العد التنازلي حتى المغرب (18:45 توقيت الجزائر)
+  // العد التنازلي لآذان المغرب (18:45)
   let target = new Date(nowAlgeria);
   target.setHours(18,45,0,0);
 
@@ -146,7 +143,7 @@ function updateClock(){
   document.getElementById("count").innerHTML = `${hh}:${mm}:${ss}`;
 }
 
-// تحديث متزامن كل 50 مللي ثانية لضمان حركة دقيقة للعقارب
+// تحديث متزامن كل 50 مللي ثانية لحركة سلسة
 setInterval(updateClock, 50);
 updateClock();
 </script>
