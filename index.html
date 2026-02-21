@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ساعة الصلاة</title>
+<title>ساعة الصلاة - توقيت الجزائر</title>
 
 <link href="https://fonts.cdnfonts.com/css/digital-7" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700&display=swap" rel="stylesheet">
@@ -110,16 +110,18 @@ body{
 </div>
 
 <script>
-/* مزامنة دقيقة مع ساعة الهاتف */
 function updateClock(){
+  const nowUTC = new Date();
 
-  const now = new Date();
+  // تحويل التوقيت إلى توقيت الجزائر GMT+1
+  const nowAlgeria = new Date(nowUTC.getTime() + 60*60*1000);
 
-  const hours = now.getHours();
-  const minutes = now.getMinutes();
-  const seconds = now.getSeconds();
-  const ms = now.getMilliseconds();
+  const hours = nowAlgeria.getHours();
+  const minutes = nowAlgeria.getMinutes();
+  const seconds = nowAlgeria.getSeconds();
+  const ms = nowAlgeria.getMilliseconds();
 
+  // حساب دوران العقارب بدقة
   const hourDeg = (hours % 12) * 30 + minutes * 0.5;
   const minuteDeg = minutes * 6 + seconds * 0.1;
   const secondDeg = seconds * 6 + ms * 0.006;
@@ -128,16 +130,15 @@ function updateClock(){
   document.getElementById("m").style.transform = `rotate(${minuteDeg}deg)`;
   document.getElementById("s").style.transform = `rotate(${secondDeg}deg)`;
 
-  /* العد التنازلي */
-  let target = new Date();
-  target.setHours(18,45,0,0); // عدل وقت المغرب حسب مدينتك
+  // العد التنازلي حتى المغرب (18:45 توقيت الجزائر)
+  let target = new Date(nowAlgeria);
+  target.setHours(18,45,0,0);
 
-  if(now > target){
+  if(nowAlgeria > target){
     target.setDate(target.getDate() + 1);
   }
 
-  const diff = target - now;
-
+  const diff = target - nowAlgeria;
   const hh = String(Math.floor(diff / 3600000)).padStart(2,'0');
   const mm = String(Math.floor(diff % 3600000 / 60000)).padStart(2,'0');
   const ss = String(Math.floor(diff % 60000 / 1000)).padStart(2,'0');
@@ -145,14 +146,9 @@ function updateClock(){
   document.getElementById("count").innerHTML = `${hh}:${mm}:${ss}`;
 }
 
-/* تحديث متزامن مع كل ثانية حقيقية */
-function syncToSecond(){
-  updateClock();
-  const delay = 1000 - new Date().getMilliseconds();
-  setTimeout(syncToSecond, delay);
-}
-
-syncToSecond();
+// تحديث متزامن كل 50 مللي ثانية لضمان حركة دقيقة للعقارب
+setInterval(updateClock, 50);
+updateClock();
 </script>
 
 </body>
