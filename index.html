@@ -13,7 +13,7 @@ body{
   align-items:center;
   height:100vh;
   margin:0;
-  font-family:Arial;
+  font-family:Arial, sans-serif;
 }
 
 /* اللوحة مربعة */
@@ -50,7 +50,7 @@ body{
   transform:translate(-50%,-50%);
 }
 
-/* العقارب داخل اللوغو ولا تتجاوز المحيط */
+/* العقارب داخل اللوغو */
 .hand{
   position:absolute;
   left:0;
@@ -60,7 +60,7 @@ body{
 
 /* عقرب الساعة */
 #h{
-  width:90px;   /* نصف أصغر من نصف قطر اللوغو */
+  width:90px;
   height:5px;
   background:black;
 }
@@ -79,29 +79,34 @@ body{
   background:red;
 }
 
-/* مستطيل العد التنازلي */
+/* مستطيل العد التنازلي الاحترافي */
 .countbox{
   margin-top:20px;
-  background:linear-gradient(#e0c15a,#9a781d);
-  padding:18px 30px;
+  background:#222;
+  padding:20px 30px;
   border-radius:16px;
-  box-shadow:0 0 20px gold;
+  box-shadow:0 0 20px greenyellow;
   text-align:center;
-  color:white;
-  font-size:28px;
-  font-weight:bold;
-  min-width:200px;
+  min-width:220px;
 }
 
+/* عنوان العد */
 .countbox .title{
   font-size:22px;
-  margin-bottom:6px;
+  margin-bottom:10px;
+  color:#0f0; /* أخضر لامع */
+  text-shadow:0 0 10px #0f0, 0 0 20px #0f0;
+  font-weight:bold;
 }
 
+/* الأرقام الكبيرة */
 .countbox .time{
-  font-size:36px;
+  font-size:50px;
+  font-weight:bold;
+  color:#0f0;
   letter-spacing:2px;
-  text-shadow:0 0 10px #fff,0 0 12px gold;
+  text-shadow:0 0 15px #0f0,0 0 25px #0f0,0 0 35px #0f0;
+  font-family:'Courier New', monospace; /* خط رقمي رياضي */
 }
 </style>
 </head>
@@ -120,10 +125,10 @@ body{
     </div>
   </div>
 
-  <!-- العد التنازلي تحت اللوغو -->
+  <!-- العد التنازلي الاحترافي -->
   <div class="countbox">
-    <div class="title">صلاة المغرب بعد</div>
-    <div class="time" id="count">...</div>
+    <div class="title">الآذان بعد:</div>
+    <div class="time" id="count">00 : 00 : 00</div>
   </div>
 
 </div>
@@ -140,7 +145,7 @@ function tick(){
   document.getElementById("m").style.transform = "rotate("+(m*6)+"deg)";
   document.getElementById("s").style.transform = "rotate("+(s*6)+"deg)";
 
-  // توقيت المغرب مؤقت
+  // توقيت مؤقت (يمكن تغييره لمواقيت دقيقة)
   let target = new Date();
   target.setHours(18);
   target.setMinutes(45);
@@ -152,6 +157,11 @@ function tick(){
   let hh = Math.floor(diff/1000/60/60);
   let mm = Math.floor(diff/1000/60)%60;
   let ss = Math.floor(diff/1000)%60;
+
+  // عرض الصفر برقمين
+  hh = hh.toString().padStart(2,'0');
+  mm = mm.toString().padStart(2,'0');
+  ss = ss.toString().padStart(2,'0');
 
   document.getElementById("count").innerHTML = hh + " : " + mm + " : " + ss;
 }
