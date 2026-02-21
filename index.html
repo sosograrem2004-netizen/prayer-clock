@@ -95,7 +95,7 @@ body{
 }
 </style>
 
-<!-- رابط الخط الرقمي (Digital-7 Mono) من Google Fonts أو يمكنك وضع الخط محلي -->
+<!-- رابط الخط الرقمي -->
 <link href="https://fonts.cdnfonts.com/css/digital-7" rel="stylesheet">
 
 </head>
@@ -151,7 +151,8 @@ function tick(){
   mm = mm.toString().padStart(2,'0');
   ss = ss.toString().padStart(2,'0');
 
-  document.getElementById("count").innerHTML = hh + " : " + mm + " : " + ss;
+  // عكس مكان الساعات والثواني: ثواني : دقائق : ساعات
+  document.getElementById("count").innerHTML = ss + " : " + mm + " : " + hh;
 }
 
 setInterval(tick,1000);
