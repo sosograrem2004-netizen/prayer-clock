@@ -79,34 +79,34 @@ body{
   background:red;
 }
 
-/* مستطيل العد التنازلي الاحترافي */
+/* مستطيل العد التنازلي المصغر */
 .countbox{
-  margin-top:20px;
+  margin-top:15px;
   background:#222;
-  padding:20px 30px;
-  border-radius:16px;
-  box-shadow:0 0 20px greenyellow;
+  padding:12px 20px; /* أقل من السابق */
+  border-radius:12px;
+  box-shadow:0 0 15px greenyellow;
   text-align:center;
-  min-width:220px;
+  min-width:180px; /* أصغر */
 }
 
 /* عنوان العد */
 .countbox .title{
-  font-size:22px;
-  margin-bottom:10px;
-  color:#0f0; /* أخضر لامع */
-  text-shadow:0 0 10px #0f0, 0 0 20px #0f0;
+  font-size:20px; /* أصغر قليلا */
+  margin-bottom:4px;
+  color:#0f0;
+  text-shadow:0 0 8px #0f0, 0 0 15px #0f0;
   font-weight:bold;
 }
 
 /* الأرقام الكبيرة */
 .countbox .time{
-  font-size:50px;
+  font-size:40px; /* أقل قليلا لكن واضحة */
   font-weight:bold;
   color:#0f0;
   letter-spacing:2px;
-  text-shadow:0 0 15px #0f0,0 0 25px #0f0,0 0 35px #0f0;
-  font-family:'Courier New', monospace; /* خط رقمي رياضي */
+  text-shadow:0 0 12px #0f0,0 0 20px #0f0,0 0 28px #0f0;
+  font-family:'Courier New', monospace;
 }
 </style>
 </head>
@@ -125,7 +125,7 @@ body{
     </div>
   </div>
 
-  <!-- العد التنازلي الاحترافي -->
+  <!-- العد التنازلي المصغر -->
   <div class="countbox">
     <div class="title">الآذان بعد:</div>
     <div class="time" id="count">00 : 00 : 00</div>
@@ -145,7 +145,7 @@ function tick(){
   document.getElementById("m").style.transform = "rotate("+(m*6)+"deg)";
   document.getElementById("s").style.transform = "rotate("+(s*6)+"deg)";
 
-  // توقيت مؤقت (يمكن تغييره لمواقيت دقيقة)
+  // توقيت مؤقت
   let target = new Date();
   target.setHours(18);
   target.setMinutes(45);
