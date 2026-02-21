@@ -3,150 +3,163 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ساعة الصلاة</title>
+<title>لوحة مواقيت الصلاة</title>
 
 <style>
+
 body{
-    background:#111;
-    text-align:center;
-    font-family:Arial, sans-serif;
-    margin:0;
-    padding:30px;
+background:#111;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+font-family:Arial;
 }
 
-/* صندوق الساعة */
-.clock-box{
-    position:relative;
-    width:420px;
-    margin:auto;
+/* الصفحة مربعة */
+.board{
+width:min(92vw,92vh);
+aspect-ratio:1/1;
+position:relative;
 }
 
 /* صورة اللوغو */
-.clock-img{
-    width:100%;
-    display:block;
+.board img{
+width:100%;
+height:100%;
+object-fit:contain;
+}
+
+/* مركز الساعة داخل اللوغو (مضبوط للصورة التي أرسلتها) */
+.center{
+position:absolute;
+left:50%;
+top:57%;
 }
 
 /* العقارب */
+
 .hand{
-    position:absolute;
-    left:50%;
-    top:50%;
-    transform-origin:0% 50%;
-    transform:rotate(0deg);
+position:absolute;
+transform-origin:0% 50%;
 }
 
 /* ساعة */
-.hour{
-    width:85px;
-    height:6px;
-    background:black;
-}
+#h{width:60px;height:6px;background:black}
 
 /* دقيقة */
-.minute{
-    width:120px;
-    height:4px;
-    background:black;
-}
+#m{width:95px;height:4px;background:black}
 
 /* ثانية */
-.second{
-    width:140px;
-    height:2px;
-    background:red;
+#s{width:110px;height:2px;background:red}
+
+
+/* مستطيل العد داخل اللوغو */
+
+.countbox{
+position:absolute;
+
+/* مكان المستطيل فوق مسك الختام */
+bottom:19%;
+left:50%;
+transform:translateX(-50%);
+
+background:linear-gradient(#e0c15a,#9a781d);
+padding:14px 28px;
+border-radius:14px;
+
+box-shadow:
+0 0 15px gold,
+inset 0 0 8px rgba(255,255,255,0.4);
+
+color:white;
+text-align:center;
 }
 
-/* صندوق المغرب */
-.maghrib-box{
-    margin-top:30px;
-    display:inline-block;
-    padding:18px 40px;
-    border-radius:20px;
-    font-size:30px;
-    color:white;
-    background:linear-gradient(#d4af37,#8c6a16);
-    box-shadow:0 0 25px gold;
+/* عنوان */
+.countbox .title{
+font-size:20px;
+margin-bottom:4px;
 }
+
+/* الأرقام بارزة */
+.countbox .time{
+font-size:38px;
+font-weight:bold;
+letter-spacing:2px;
+text-shadow:
+0 0 10px #fff,
+0 0 15px gold,
+2px 2px 0 #000;
+}
+
 </style>
 </head>
 
 <body>
 
-<div class="clock-box">
+<div class="board">
 
-<!-- اسم الصورة الجديد -->
-<img src="background.jpg.png" class="clock-img">
+<img src="background.png">
 
-<div id="h" class="hand hour"></div>
-<div id="m" class="hand minute"></div>
-<div id="s" class="hand second"></div>
-
+<!-- العقارب -->
+<div class="center">
+<div id="h" class="hand"></div>
+<div id="m" class="hand"></div>
+<div id="s" class="hand"></div>
 </div>
 
-<div class="maghrib-box">
-صلاة المغرب بعد:
-<span id="count">...</span>
+<!-- العد داخل اللوغو -->
+<div class="countbox">
+<div class="title">صلاة المغرب بعد</div>
+<div class="time" id="count"></div>
+</div>
+
 </div>
 
 <script>
 
-/* تحريك الساعة الحقيقية */
+function tick(){
 
-function updateClock(){
+const n=new Date();
 
-const now = new Date();
+let h=n.getHours()%12;
+let m=n.getMinutes();
+let s=n.getSeconds();
 
-const h = now.getHours()%12;
-const m = now.getMinutes();
-const s = now.getSeconds();
+document.getElementById("h").style.transform=
+"rotate("+(h*30+m/2)+"deg)";
 
-const hDeg = h*30 + m*0.5;
-const mDeg = m*6;
-const sDeg = s*6;
+document.getElementById("m").style.transform=
+"rotate("+(m*6)+"deg)";
 
-document.getElementById("h").style.transform="rotate("+hDeg+"deg)";
-document.getElementById("m").style.transform="rotate("+mDeg+"deg)";
-document.getElementById("s").style.transform="rotate("+sDeg+"deg)";
-}
+document.getElementById("s").style.transform=
+"rotate("+(s*6)+"deg)";
 
 
-/* ضع توقيت المغرب هنا (مؤقت حاليا) */
-
-let maghribHour=18;
-let maghribMinute=45;
-
-
-/* العد التنازلي */
-
-function updateCountdown(){
-
-const now=new Date();
+/* المغرب (مؤقت حاليا) */
 
 let target=new Date();
-target.setHours(maghribHour);
-target.setMinutes(maghribMinute);
+target.setHours(18);
+target.setMinutes(45);
 target.setSeconds(0);
 
-if(now>target) target.setDate(target.getDate()+1);
+if(n>target) target.setDate(target.getDate()+1);
 
-let diff=target-now;
+let d=target-n;
 
-let h=Math.floor(diff/1000/60/60);
-let m=Math.floor(diff/1000/60)%60;
-let s=Math.floor(diff/1000)%60;
+let hh=Math.floor(d/1000/60/60);
+let mm=Math.floor(d/1000/60)%60;
+let ss=Math.floor(d/1000)%60;
 
 document.getElementById("count").innerHTML=
-h+" س "+m+" د "+s+" ث";
+hh+" : "+mm+" : "+ss;
+
 }
 
-
-/* تحديث كل ثانية */
-
-setInterval(()=>{
-updateClock();
-updateCountdown();
-},1000);
+setInterval(tick,1000);
+tick();
 
 </script>
 
