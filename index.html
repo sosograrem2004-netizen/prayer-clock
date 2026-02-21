@@ -1,159 +1,355 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ساعة الصلاة</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ساعة الصلاة - المغرب</title>
 
-<link href="https://fonts.cdnfonts.com/css/digital-7" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700&display=swap" rel="stylesheet">
+  <!-- الخطوط -->
+  <link href="https://fonts.cdnfonts.com/css/digital-7" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
 
-<style>
-body{
-  background:#111;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-  margin:0;
-  font-family:Arial, sans-serif;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-.board{
-  width:min(85vw,85vh);
-  aspect-ratio:1/1;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-}
+    body {
+      background: #0a0f1e; /* لون داكن عميق */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Cairo', sans-serif;
+    }
 
-.clock-box{
-  position:relative;
-  width:70%;
-  max-width:280px;
-  aspect-ratio:1/1;
-}
+    .board {
+      width: min(95vw, 95vh);
+      max-width: 550px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 30px;
+      padding: 20px 15px 30px;
+      box-shadow: 0 20px 30px rgba(0,0,0,0.6);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-.clock-img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  display:block;
-  border-radius:10px;
-}
+    /* حاوية الساعة التناظرية */
+    .clock-box {
+      position: relative;
+      width: 80%;
+      max-width: 400px;
+      aspect-ratio: 1/1;
+      margin-top: 5px;
+    }
 
-.center{
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-}
+    /* صورة وجه الساعة (يمكن استبدالها) */
+    .clock-img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border-radius: 50%;
+      background: #1e2a3a; /* لون خلفية داكن */
+      box-shadow: 0 0 0 4px #2c3e50, 0 10px 20px rgba(0,0,0,0.8);
+      /* إذا أردت إضافة أرقام بشكل CSS يمكن إضافتها هنا */
+      object-fit: cover; /* لتغطية الصورة إن وجدت */
+    }
 
-.hand{
-  position:absolute;
-  left:0;
-  top:0;
-  transform-origin:0% 50%;
-}
+    /* في حال عدم وجود صورة، نرسم بعض التفاصيل البسيطة */
+    .clock-img:after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+    }
 
-#h{ width:60px; height:4px; background:black; }
-#m{ width:85px; height:3px; background:black; }
-#s{ width:100px; height:2px; background:red; }
+    /* النقطة المركزية */
+    .center {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 4%;
+      height: 4%;
+      background: #ffd966;
+      border-radius: 50%;
+      z-index: 10;
+      box-shadow: 0 0 10px #ffaa00;
+    }
 
-.title{
-  margin-top:14px;
-  font-family:'Cairo', sans-serif;
-  font-size:18px;
-  font-weight:700;
-  color:#ffffff;
-  text-align:center;
-}
+    /* العقارب - مشتركة */
+    .hand {
+      position: absolute;
+      left: 50%;       /* نضع نقطة الارتكاز عند 50% أفقياً */
+      bottom: 50%;      /* والجزء السفلي عند 50% ليكون الارتكاز في منتصف العقرب تقريباً */
+      transform-origin: 50% 100%; /* نقطة الارتكاز أسفل المنتصف (مكان المسمار) */
+      background: linear-gradient(to top, #f1c40f, #f39c12);
+      border-radius: 30px;
+      box-shadow: 0 0 5px rgba(255,215,0,0.8);
+      transition: background 0.2s;
+      transform: rotate(0deg); /* يتم التعديل عبر JS */
+    }
 
-.countbox{
-  margin-top:6px;
-  background:#000;
-  padding:6px 14px;
-  border-radius:8px;
-  display:inline-block;
-}
+    /* أطوال العقارب نسبة إلى عرض الحاوية */
+    #h {
+      width: 6px;
+      height: 25%;      /* 25% من ارتفاع الحاوية */
+      background: #f1c40f;
+    }
+    #m {
+      width: 4px;
+      height: 35%;
+      background: #f1c40f;
+    }
+    #s {
+      width: 2px;
+      height: 40%;
+      background: #e74c3c;
+      box-shadow: 0 0 10px #e74c3c;
+    }
 
-.countbox .time{
-  font-family:'Digital-7 Mono', monospace;
-  font-size:30px;
-  font-weight:bold;
-  color:#ffffff;
-  letter-spacing:3px;
-  text-shadow:none;
-}
-</style>
+    /* العنوان */
+    .title {
+      margin-top: 25px;
+      font-size: 22px;
+      font-weight: 700;
+      color: #ecf0f1;
+      text-shadow: 0 2px 5px #2c3e50;
+      letter-spacing: 1px;
+    }
+
+    /* حاوية العداد */
+    .countbox {
+      margin-top: 8px;
+      background: #00000040;
+      backdrop-filter: blur(4px);
+      padding: 12px 25px;
+      border-radius: 60px;
+      border: 1px solid #f1c40f40;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    }
+
+    .countbox .time {
+      font-family: 'Digital-7 Mono', 'Courier New', monospace;
+      font-size: 48px;
+      font-weight: bold;
+      color: #f1c40f;
+      text-shadow: 0 0 10px #f1c40f;
+      letter-spacing: 5px;
+      line-height: 1.2;
+    }
+
+    /* رسالة انتهاء العد */
+    .finished-message {
+      color: #2ecc71;
+      font-size: 28px;
+      font-weight: bold;
+      text-shadow: 0 0 15px #2ecc71;
+      display: none;
+    }
+
+    /* حقل اختيار وقت المغرب */
+    .time-picker {
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #1e2a3a;
+      padding: 10px 18px;
+      border-radius: 50px;
+      border: 1px solid #3a4a5a;
+    }
+
+    .time-picker label {
+      color: #b0c4de;
+      font-size: 16px;
+    }
+
+    .time-picker input[type="time"] {
+      background: #0f1a24;
+      border: 1px solid #f1c40f;
+      color: #f1c40f;
+      font-family: 'Digital-7 Mono', monospace;
+      font-size: 20px;
+      padding: 5px 10px;
+      border-radius: 30px;
+      outline: none;
+      direction: ltr; /* لكي يظهر التنسيق بشكل صحيح */
+    }
+
+    .time-picker input[type="time"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+      opacity: 0.7;
+      cursor: pointer;
+    }
+
+    /* تحسينات للأجهزة الصغيرة */
+    @media (max-width: 480px) {
+      .title { font-size: 18px; }
+      .countbox .time { font-size: 36px; }
+      .hand { border-radius: 10px; }
+      #h { width: 4px; }
+      #m { width: 3px; }
+      #s { width: 2px; }
+    }
+  </style>
 </head>
-
 <body>
 
 <div class="board">
 
+  <!-- الساعة التناظرية -->
   <div class="clock-box">
-    <img src="background.jpg.png" class="clock-img">
+    <!-- صورة وجه الساعة (يمكنك استبدالها بصورتك الخاصة) -->
+    <img src="background.jpg.png" alt="وجه الساعة" class="clock-img" onerror="this.style.background='#1e2a3a'; this.src=''; this.alt='';">
+
+    <!-- نقطة المركز التي تثبت عليها العقارب -->
     <div class="center">
+      <!-- العقارب ستوضع هنا (نسبياً) -->
       <div id="h" class="hand"></div>
       <div id="m" class="hand"></div>
       <div id="s" class="hand"></div>
     </div>
   </div>
 
-  <div class="title">آذان المغرب بعد:</div>
+  <!-- العنوان والعداد -->
+  <div class="title">🕋 آذان المغرب بعد:</div>
 
   <div class="countbox">
     <div class="time" id="count">00:00:00</div>
+    <div class="finished-message" id="finishedMsg">🔔 حان وقت المغرب</div>
+  </div>
+
+  <!-- اختيار وقت المغرب (يمكن إضافته أو إخفاؤه) -->
+  <div class="time-picker">
+    <label for="maghribTime">وقت المغرب:</label>
+    <input type="time" id="maghribTime" value="18:45">
   </div>
 
 </div>
 
 <script>
-/* مزامنة دقيقة مع ساعة الهاتف */
-function updateClock(){
+  (function() {
+    // --- عناصر ثابتة ---
+    const hourHand = document.getElementById('h');
+    const minuteHand = document.getElementById('m');
+    const secondHand = document.getElementById('s');
+    const countElement = document.getElementById('count');
+    const finishedMsg = document.getElementById('finishedMsg');
+    const maghribInput = document.getElementById('maghribTime');
 
-  const now = new Date();
+    // --- متغيرات لتخزين وقت المغرب (يتم تحديثها عند تغيير input) ---
+    let targetHour = 18;
+    let targetMinute = 45;
+    let targetSecond = 0;   // ثابت
 
-  const hours = now.getHours();
-  const minutes = now.getMinutes();
-  const seconds = now.getSeconds();
-  const ms = now.getMilliseconds();
+    // دالة تحديث وقت المغرب من حقل الإدخال
+    function updateTargetTimeFromInput() {
+      const timeStr = maghribInput.value; // format "HH:MM"
+      if (timeStr) {
+        const parts = timeStr.split(':');
+        targetHour = parseInt(parts[0], 10);
+        targetMinute = parseInt(parts[1], 10);
+      }
+    }
 
-  const hourDeg = (hours % 12) * 30 + minutes * 0.5;
-  const minuteDeg = minutes * 6 + seconds * 0.1;
-  const secondDeg = seconds * 6 + ms * 0.006;
+    // استدعاء عند تغيير الوقت
+    maghribInput.addEventListener('change', function() {
+      updateTargetTimeFromInput();
+    });
 
-  document.getElementById("h").style.transform = `rotate(${hourDeg}deg)`;
-  document.getElementById("m").style.transform = `rotate(${minuteDeg}deg)`;
-  document.getElementById("s").style.transform = `rotate(${secondDeg}deg)`;
+    // تحديث أولي
+    updateTargetTimeFromInput();
 
-  /* العد التنازلي */
-  let target = new Date();
-  target.setHours(18,45,0,0); // عدل وقت المغرب حسب مدينتك
+    // --- دالة حساب الوقت المتبقي للمغرب ---
+    function getTimeRemaining() {
+      const now = new Date();
 
-  if(now > target){
-    target.setDate(target.getDate() + 1);
-  }
+      // إنشاء target time لليوم الحالي
+      let target = new Date();
+      target.setHours(targetHour, targetMinute, targetSecond, 0);
 
-  const diff = target - now;
+      // إذا كان الوقت الحالي بعد target، نضيف يوماً
+      if (now > target) {
+        target.setDate(target.getDate() + 1);
+      }
 
-  const hh = String(Math.floor(diff / 3600000)).padStart(2,'0');
-  const mm = String(Math.floor(diff % 3600000 / 60000)).padStart(2,'0');
-  const ss = String(Math.floor(diff % 60000 / 1000)).padStart(2,'0');
+      return target - now;
+    }
 
-  document.getElementById("count").innerHTML = `${hh}:${mm}:${ss}`;
-}
+    // --- دالة تحديث العد التنازلي (تستدعى كل ثانية) ---
+    function updateCountdown() {
+      const diff = getTimeRemaining();
 
-/* تحديث متزامن مع كل ثانية حقيقية */
-function syncToSecond(){
-  updateClock();
-  const delay = 1000 - new Date().getMilliseconds();
-  setTimeout(syncToSecond, delay);
-}
+      if (diff <= 0) {
+        // انتهاء الوقت: إظهار رسالة وإخفاء الأرقام
+        countElement.style.display = 'none';
+        finishedMsg.style.display = 'block';
+        // نعيد تعيين target لليوم التالي بعد فترة وجيزة (اختياري)
+        // لكننا سنتركه يظهر الرسالة لمدة دقيقة مثلاً ثم يعود للعد التنازلي التالي
+        // يمكن إعادة ضبط target تلقائياً عندما يصبح الفرق > 0
+        // هنا سنعيد تفعيل الأرقام بعد 5 ثوانٍ (اختياري)
+        setTimeout(() => {
+          countElement.style.display = 'block';
+          finishedMsg.style.display = 'none';
+        }, 5000);
+        return;
+      }
 
-syncToSecond();
+      // إظهار العدادات
+      countElement.style.display = 'block';
+      finishedMsg.style.display = 'none';
+
+      const hours = Math.floor(diff / 3600000);
+      const minutes = Math.floor((diff % 3600000) / 60000);
+      const seconds = Math.floor((diff % 60000) / 1000);
+
+      countElement.innerHTML = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    // --- دالة تحديث عقارب الساعة (حركة سلسة) ---
+    function updateClockHands() {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const seconds = now.getSeconds();
+      const ms = now.getMilliseconds();
+
+      // حساب الزوايا مع إضافة 90 درجة لجعل العقرب يشير للأعلى عند 12
+      const hourDeg = ((hours % 12) * 30) + (minutes * 0.5) + 90;
+      const minuteDeg = (minutes * 6) + (seconds * 0.1) + 90;
+      const secondDeg = (seconds * 6) + (ms * 0.006) + 90;
+
+      hourHand.style.transform = `rotate(${hourDeg}deg)`;
+      minuteHand.style.transform = `rotate(${minuteDeg}deg)`;
+      secondHand.style.transform = `rotate(${secondDeg}deg)`;
+
+      // استمرار التحديث السلس
+      requestAnimationFrame(updateClockHands);
+    }
+
+    // --- دورة حياة التحديثات ---
+    // 1. تشغيل حركة العقارب (باستخدام requestAnimationFrame)
+    requestAnimationFrame(updateClockHands);
+
+    // 2. تحديث العد التنازلي كل ثانية (مع تصحيح millisecond)
+    function startCountdownInterval() {
+      updateCountdown(); // فوري
+      const interval = setInterval(updateCountdown, 1000);
+      return interval;
+    }
+    startCountdownInterval();
+
+    // 3. التأكد من تحديث العد التنازلي فور تغيير وقت المغرب
+    maghribInput.addEventListener('input', function() {
+      updateTargetTimeFromInput();
+      updateCountdown(); // تحديث فوري عند تغيير الوقت
+    });
+
+  })();
 </script>
-
 </body>
 </html>
