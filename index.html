@@ -85,13 +85,14 @@ body{
   text-align:center;
 }
 
-/* الأرقام بصيغة Digital Alarm Clock */
+/* الأرقام بصيغة Digital Alarm Clock، سميكة وقريبة */
 .countbox .time{
   font-family:'Digital-7 Mono', 'Courier New', monospace; /* Digital font */
   font-size:40px;
+  font-weight:900; /* أكثر سماكة */
   color:#0f0;
+  letter-spacing:0px; /* أرقام قريبة جدًا */
   text-shadow:0 0 6px #0f0, 0 0 10px #0f0;
-  letter-spacing:2px;
 }
 </style>
 
@@ -151,7 +152,7 @@ function tick(){
   mm = mm.toString().padStart(2,'0');
   ss = ss.toString().padStart(2,'0');
 
-  // عكس مكان الساعات والثواني: ثواني : دقائق : ساعات
+  // الثواني : دقائق : ساعات
   document.getElementById("count").innerHTML = ss + " : " + mm + " : " + hh;
 }
 
