@@ -8,70 +8,79 @@
 
 <style>
 body{
-background:#111;
-text-align:center;
-font-family:Arial;
-margin:0;
-padding:20px;
+  background:#111;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  margin:0;
+  font-family:Arial, sans-serif;
 }
 
+/* اللوحة الرئيسية */
 .clock-box{
-position:relative;
-width:420px;
-margin:auto;
+  position:relative;
+  width:300px; /* تصغير حجم اللوغو */
+  height:300px;
 }
 
+/* صورة اللوغو */
 .clock-img{
-width:100%;
-display:block;
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:contain;
+  border-radius:10px;
 }
 
-/* مركز الساعة داخل اللوغو */
+/* مركز العقارب داخل اللوغو */
 .center{
-position:absolute;
-left:50%;
-top:55%;
-transform:translate(-50%,-50%);
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%, -50%);
 }
 
 /* العقارب */
 .hand{
-position:absolute;
-left:0;
-top:0;
-transform-origin:0% 50%;
+  position:absolute;
+  left:0;
+  top:0;
+  transform-origin:0% 50%;
 }
 
-/* ساعة */
+/* عقرب الساعة */
 #h{
-width:70px;
-height:6px;
-background:black;
+  width:60px;
+  height:6px;
+  background:black;
 }
 
-/* دقيقة */
+/* عقرب الدقيقة */
 #m{
-width:110px;
-height:4px;
-background:black;
+  width:90px;
+  height:4px;
+  background:black;
 }
 
-/* ثانية */
+/* عقرب الثانية */
 #s{
-width:130px;
-height:2px;
-background:red;
+  width:100px;
+  height:2px;
+  background:red;
 }
 
+/* العد التنازلي */
 .maghrib{
-margin-top:30px;
-padding:22px 38px;
-font-size:30px;
-color:white;
-border-radius:20px;
-display:inline-block;
-background:linear-gradient(#d4af37,#8a6b12);
-box-shadow:0 0 25px gold;
+  margin-top:20px;
+  padding:15px 25px;
+  font-size:26px;
+  color:white;
+  border-radius:15px;
+  display:inline-block;
+  background:linear-gradient(#d4af37,#8a6b12);
+  box-shadow:0 0 20px gold;
+  text-align:center;
 }
 </style>
 </head>
@@ -80,15 +89,15 @@ box-shadow:0 0 25px gold;
 
 <div class="clock-box">
 
-<!-- تم وضع اسم اللوغو هنا -->
-<img src="background.jpg.png" class="clock-img">
+  <!-- اللوغو -->
+  <img src="background.jpg.png" class="clock-img">
 
-<!-- نقطة المركز -->
-<div class="center">
-<div id="h" class="hand"></div>
-<div id="m" class="hand"></div>
-<div id="s" class="hand"></div>
-</div>
+  <!-- العقارب -->
+  <div class="center">
+    <div id="h" class="hand"></div>
+    <div id="m" class="hand"></div>
+    <div id="s" class="hand"></div>
+  </div>
 
 </div>
 
@@ -98,47 +107,39 @@ box-shadow:0 0 25px gold;
 </div>
 
 <script>
-
 function tick(){
+  const n = new Date();
 
-const n=new Date();
+  let h = n.getHours() % 12;
+  let m = n.getMinutes();
+  let s = n.getSeconds();
 
-let h=n.getHours()%12;
-let m=n.getMinutes();
-let s=n.getSeconds();
+  document.getElementById("h").style.transform =
+    "rotate(" + (h*30 + m/2) + "deg)";
+  document.getElementById("m").style.transform =
+    "rotate(" + (m*6) + "deg)";
+  document.getElementById("s").style.transform =
+    "rotate(" + (s*6) + "deg)";
 
-document.getElementById("h").style.transform=
-"rotate("+(h*30+m/2)+"deg)";
+  // العد التنازلي (مثال)
+  let target = new Date();
+  target.setHours(18);
+  target.setMinutes(45);
+  target.setSeconds(0);
+  if(n > target) target.setDate(target.getDate() + 1);
 
-document.getElementById("m").style.transform=
-"rotate("+(m*6)+"deg)";
+  let diff = target - n;
 
-document.getElementById("s").style.transform=
-"rotate("+(s*6)+"deg)";
+  let hh = Math.floor(diff/1000/60/60);
+  let mm = Math.floor(diff/1000/60) % 60;
+  let ss = Math.floor(diff/1000) % 60;
 
-/* المغرب مؤقت */
-
-let target=new Date();
-target.setHours(18);
-target.setMinutes(45);
-target.setSeconds(0);
-
-if(n>target) target.setDate(target.getDate()+1);
-
-let d=target-n;
-
-let hh=Math.floor(d/1000/60/60);
-let mm=Math.floor(d/1000/60)%60;
-let ss=Math.floor(d/1000)%60;
-
-document.getElementById("count").innerHTML=
-hh+" س "+mm+" د "+ss+" ث";
-
+  document.getElementById("count").innerHTML =
+    hh + " س " + mm + " د " + ss + " ث";
 }
 
-setInterval(tick,1000);
+setInterval(tick, 1000);
 tick();
-
 </script>
 
 </body>
