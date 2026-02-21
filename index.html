@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>ساعة الصلاة</title>
 
 <style>
@@ -14,31 +13,41 @@ body{
   align-items:center;
   height:100vh;
   margin:0;
-  font-family:Arial, sans-serif;
+  font-family:Arial;
 }
 
-/* اللوحة الرئيسية */
+/* اللوحة مربعة */
+.board{
+  width:min(92vw,92vh);
+  aspect-ratio:1/1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+/* اللوغو */
 .clock-box{
   position:relative;
-  width:300px; /* تصغير حجم اللوغو */
-  height:300px;
+  width:90%;
+  max-width:400px;
+  aspect-ratio:1/1;
 }
 
 /* صورة اللوغو */
 .clock-img{
   width:100%;
   height:100%;
-  display:block;
   object-fit:contain;
+  display:block;
   border-radius:10px;
 }
 
-/* مركز العقارب داخل اللوغو */
+/* مركز العقارب في منتصف اللوغو */
 .center{
   position:absolute;
   left:50%;
   top:50%;
-  transform:translate(-50%, -50%);
+  transform:translate(-50%,-50%);
 }
 
 /* العقارب */
@@ -49,96 +58,105 @@ body{
   transform-origin:0% 50%;
 }
 
-/* عقرب الساعة */
+/* عقرب الساعة بحجم كبير */
 #h{
-  width:60px;
+  width:180px;   /* تقريبًا نصف قطر اللوغو */
   height:6px;
   background:black;
 }
 
-/* عقرب الدقيقة */
+/* عقرب الدقيقة بحجم كبير */
 #m{
-  width:90px;
+  width:220px;
   height:4px;
   background:black;
 }
 
-/* عقرب الثانية */
+/* عقرب الثانية بحجم كبير */
 #s{
-  width:100px;
+  width:250px;
   height:2px;
   background:red;
 }
 
-/* العد التنازلي */
-.maghrib{
+/* مستطيل العد التنازلي */
+.countbox{
   margin-top:20px;
-  padding:15px 25px;
-  font-size:26px;
-  color:white;
-  border-radius:15px;
-  display:inline-block;
-  background:linear-gradient(#d4af37,#8a6b12);
+  background:linear-gradient(#e0c15a,#9a781d);
+  padding:18px 30px;
+  border-radius:16px;
   box-shadow:0 0 20px gold;
   text-align:center;
+  color:white;
+  font-size:28px;
+  font-weight:bold;
+  min-width:200px;
+}
+
+.countbox .title{
+  font-size:22px;
+  margin-bottom:6px;
+}
+
+.countbox .time{
+  font-size:36px;
+  letter-spacing:2px;
+  text-shadow:0 0 10px #fff,0 0 12px gold;
 }
 </style>
 </head>
 
 <body>
 
-<div class="clock-box">
+<div class="board">
 
   <!-- اللوغو -->
-  <img src="background.jpg.png" class="clock-img">
+  <div class="clock-box">
+    <img src="background.jpg.png" class="clock-img">
+    <div class="center">
+      <div id="h" class="hand"></div>
+      <div id="m" class="hand"></div>
+      <div id="s" class="hand"></div>
+    </div>
+  </div>
 
-  <!-- العقارب -->
-  <div class="center">
-    <div id="h" class="hand"></div>
-    <div id="m" class="hand"></div>
-    <div id="s" class="hand"></div>
+  <!-- العد التنازلي تحت اللوغو -->
+  <div class="countbox">
+    <div class="title">صلاة المغرب بعد</div>
+    <div class="time" id="count">...</div>
   </div>
 
 </div>
 
-<div class="maghrib">
-صلاة المغرب بعد:
-<span id="count"></span>
-</div>
-
 <script>
 function tick(){
-  const n = new Date();
+  const n=new Date();
 
-  let h = n.getHours() % 12;
+  let h = n.getHours()%12;
   let m = n.getMinutes();
   let s = n.getSeconds();
 
-  document.getElementById("h").style.transform =
-    "rotate(" + (h*30 + m/2) + "deg)";
-  document.getElementById("m").style.transform =
-    "rotate(" + (m*6) + "deg)";
-  document.getElementById("s").style.transform =
-    "rotate(" + (s*6) + "deg)";
+  document.getElementById("h").style.transform = "rotate("+(h*30+m/2)+"deg)";
+  document.getElementById("m").style.transform = "rotate("+(m*6)+"deg)";
+  document.getElementById("s").style.transform = "rotate("+(s*6)+"deg)";
 
-  // العد التنازلي (مثال)
+  // توقيت المغرب مؤقت
   let target = new Date();
   target.setHours(18);
   target.setMinutes(45);
   target.setSeconds(0);
-  if(n > target) target.setDate(target.getDate() + 1);
+  if(n > target) target.setDate(target.getDate()+1);
 
   let diff = target - n;
 
   let hh = Math.floor(diff/1000/60/60);
-  let mm = Math.floor(diff/1000/60) % 60;
-  let ss = Math.floor(diff/1000) % 60;
+  let mm = Math.floor(diff/1000/60)%60;
+  let ss = Math.floor(diff/1000)%60;
 
-  document.getElementById("count").innerHTML =
-    hh + " س " + mm + " د " + ss + " ث";
+  document.getElementById("count").innerHTML = hh + " : " + mm + " : " + ss;
 }
 
-setInterval(tick, 1000);
+setInterval(tick,1000);
 tick();
 </script>
 
