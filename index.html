@@ -79,36 +79,25 @@ body{
   background:red;
 }
 
-/* مستطيل العد التنازلي المصغر جدًا */
+/* العد التنازلي بدون إطار */
 .countbox{
-  margin-top:8px;
-  background:#222;
-  padding:4px 8px; /* أصغر إطار ممكن */
-  border-radius:8px;
-  box-shadow:0 0 6px greenyellow;
+  margin-top:10px;
   text-align:center;
-  min-width:100px; /* أصغر عرض */
 }
 
-/* عنوان العد */
-.countbox .title{
-  font-size:12px; /* صغير جدًا */
-  margin-bottom:2px;
-  color:#0f0;
-  text-shadow:0 0 4px #0f0, 0 0 6px #0f0;
-  font-weight:bold;
-}
-
-/* الأرقام الكبيرة والسميكة */
+/* الأرقام بصيغة Digital Alarm Clock */
 .countbox .time{
-  font-size:20px; /* صغير وواضح */
-  font-weight:600; /* أخف قليلاً لتناسب الحجم */
+  font-family:'Digital-7 Mono', 'Courier New', monospace; /* Digital font */
+  font-size:40px;
   color:#0f0;
-  letter-spacing:1px;
-  text-shadow:0 0 6px #0f0,0 0 8px #0f0,0 0 10px #0f0;
-  font-family:'Courier New', monospace;
+  text-shadow:0 0 6px #0f0, 0 0 10px #0f0;
+  letter-spacing:2px;
 }
 </style>
+
+<!-- رابط الخط الرقمي (Digital-7 Mono) من Google Fonts أو يمكنك وضع الخط محلي -->
+<link href="https://fonts.cdnfonts.com/css/digital-7" rel="stylesheet">
+
 </head>
 
 <body>
@@ -125,9 +114,8 @@ body{
     </div>
   </div>
 
-  <!-- العد التنازلي المصغر جدًا -->
+  <!-- العد التنازلي بدون إطار -->
   <div class="countbox">
-    <div class="title">الآذان بعد:</div>
     <div class="time" id="count">00 : 00 : 00</div>
   </div>
 
