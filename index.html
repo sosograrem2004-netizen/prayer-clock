@@ -79,33 +79,33 @@ body{
   background:red;
 }
 
-/* مستطيل العد التنازلي المصغر */
+/* مستطيل العد التنازلي المصغر جدًا */
 .countbox{
-  margin-top:15px;
+  margin-top:8px;
   background:#222;
-  padding:10px 15px; /* أصغر إطار */
-  border-radius:12px;
-  box-shadow:0 0 15px greenyellow;
+  padding:4px 8px; /* أصغر إطار ممكن */
+  border-radius:8px;
+  box-shadow:0 0 6px greenyellow;
   text-align:center;
-  min-width:150px; /* أصغر عرض */
+  min-width:100px; /* أصغر عرض */
 }
 
 /* عنوان العد */
 .countbox .title{
-  font-size:20px;
-  margin-bottom:4px;
+  font-size:12px; /* صغير جدًا */
+  margin-bottom:2px;
   color:#0f0;
-  text-shadow:0 0 8px #0f0, 0 0 15px #0f0;
+  text-shadow:0 0 4px #0f0, 0 0 6px #0f0;
   font-weight:bold;
 }
 
 /* الأرقام الكبيرة والسميكة */
 .countbox .time{
-  font-size:48px; /* كبيرة وواضحة */
-  font-weight:900; /* سميكة جدًا */
+  font-size:20px; /* صغير وواضح */
+  font-weight:600; /* أخف قليلاً لتناسب الحجم */
   color:#0f0;
-  letter-spacing:2px;
-  text-shadow:0 0 12px #0f0,0 0 20px #0f0,0 0 28px #0f0;
+  letter-spacing:1px;
+  text-shadow:0 0 6px #0f0,0 0 8px #0f0,0 0 10px #0f0;
   font-family:'Courier New', monospace;
 }
 </style>
@@ -125,7 +125,7 @@ body{
     </div>
   </div>
 
-  <!-- العد التنازلي المصغر -->
+  <!-- العد التنازلي المصغر جدًا -->
   <div class="countbox">
     <div class="title">الآذان بعد:</div>
     <div class="time" id="count">00 : 00 : 00</div>
