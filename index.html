@@ -21,7 +21,6 @@ body{
   font-family:Arial, sans-serif;
 }
 
-/* اللوحة */
 .board{
   width:min(92vw,92vh);
   aspect-ratio:1/1;
@@ -30,7 +29,6 @@ body{
   align-items:center;
 }
 
-/* صندوق الساعة */
 .clock-box{
   position:relative;
   width:90%;
@@ -46,7 +44,6 @@ body{
   border-radius:10px;
 }
 
-/* مركز العقارب */
 .center{
   position:absolute;
   left:50%;
@@ -79,7 +76,6 @@ body{
   background:red;
 }
 
-/* عنوان العد التنازلي */
 .title{
   margin-top:12px;
   font-family:'Cairo', sans-serif;
@@ -89,7 +85,6 @@ body{
   text-align:center;
 }
 
-/* لوحة العد التنازلي */
 .countbox{
   margin-top:6px;
   background:#000;
@@ -98,7 +93,6 @@ body{
   display:inline-block;
 }
 
-/* أرقام واضحة بدون خيال */
 .countbox .time{
   font-family:'Digital-7 Mono', monospace;
   font-size:42px;
@@ -122,10 +116,8 @@ body{
     </div>
   </div>
 
-  <!-- العبارة المطلوبة -->
   <div class="title">آذان المغرب بعد:</div>
 
-  <!-- لوحة العد -->
   <div class="countbox">
     <div class="time" id="count">00:00:00</div>
   </div>
@@ -160,7 +152,8 @@ function tick(){
   mm = mm.toString().padStart(2,'0');
   ss = ss.toString().padStart(2,'0');
 
-  document.getElementById("count").innerHTML = ss + ":" + mm + ":" + hh;
+  /* تم تبديل مكان الساعات مع الثواني */
+  document.getElementById("count").innerHTML = hh + ":" + mm + ":" + ss;
 }
 
 setInterval(tick,1000);
