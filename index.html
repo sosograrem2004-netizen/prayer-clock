@@ -4,16 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ساعة الصلاة - القرارم قوقة</title>
-
-  <!-- الخطوط -->
   <link href="https://fonts.cdnfonts.com/css/digital-7" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
       background: #0a0f1e;
       display: flex;
@@ -36,7 +29,7 @@
       align-items: center;
     }
 
-    /* حاوية الساعة التناظرية */
+    /* حاوية الساعة */
     .clock-box {
       position: relative;
       width: 80%;
@@ -45,41 +38,37 @@
       margin-top: 5px;
     }
 
-    /* صورة وجه الساعة (اختيارية) */
-    .clock-img {
+    /* وجه الساعة (بدون صورة) */
+    .clock-face {
       width: 100%;
       height: 100%;
-      display: block;
       border-radius: 50%;
-      background: #1e2a3a; /* خلفية احتياطية */
+      background: #1e2a3a;
       box-shadow: 0 0 0 4px #2c3e50, 0 10px 20px rgba(0,0,0,0.8);
-      object-fit: cover;
+      position: relative;
     }
 
-    /* أرقام الساعة (12, 3, 6, 9) */
-    .clock-number {
+    /* أرقام الساعة */
+    .number {
       position: absolute;
-      font-family: 'Cairo', sans-serif;
-      font-size: 24px;
-      font-weight: 700;
+      font-size: 28px;
+      font-weight: bold;
       color: #ecf0f1;
       text-shadow: 0 0 8px #3498db;
       transform: translate(-50%, -50%);
-      z-index: 6;
     }
     #num12 { top: 8%; left: 50%; }
     #num3  { top: 50%; left: 92%; }
     #num6  { top: 92%; left: 50%; }
     #num9  { top: 50%; left: 8%; }
 
-    /* حاوية العقارب */
+    /* حاوية العقارب (تملأ الوجه بالكامل) */
     .hands-container {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: 5;
     }
 
     /* نقطة المركز */
@@ -96,7 +85,7 @@
       box-shadow: 0 0 10px #ffaa00;
     }
 
-    /* العقارب - جميعها تتمركز في نفس النقطة */
+    /* العقارب */
     .hand {
       position: absolute;
       left: 50%;
@@ -104,7 +93,7 @@
       transform-origin: 50% 100%;
       border-radius: 30px;
       box-shadow: 0 0 8px rgba(0,0,0,0.8);
-      transform: rotate(0deg);
+      transform: rotate(0deg); /* يتم التحديث عبر JS */
     }
 
     /* عقرب الساعات (أسود قاتم) */
@@ -142,7 +131,7 @@
       letter-spacing: 1px;
     }
 
-    /* حاوية العداد */
+    /* العداد */
     .countbox {
       margin-top: 8px;
       background: #00000040;
@@ -154,7 +143,7 @@
     }
 
     .countbox .time {
-      font-family: 'Digital-7 Mono', 'Courier New', monospace;
+      font-family: 'Digital-7 Mono', monospace;
       font-size: 48px;
       font-weight: bold;
       color: #f1c40f;
@@ -175,7 +164,7 @@
     @media (max-width: 480px) {
       .title { font-size: 18px; }
       .countbox .time { font-size: 36px; }
-      .clock-number { font-size: 18px; }
+      .number { font-size: 20px; }
       #hour-hand { width: 6px; }
       #minute-hand { width: 4px; }
       #second-hand { width: 2px; }
@@ -183,21 +172,18 @@
   </style>
 </head>
 <body>
-
 <div class="board">
-
-  <!-- الساعة التناظرية -->
   <div class="clock-box">
-    <!-- صورة وجه الساعة (اختيارية) -->
-    <img src="background.jpg.png" alt="وجه الساعة" class="clock-img" onerror="this.style.background='#1e2a3a'; this.src='';">
+    <!-- وجه الساعة -->
+    <div class="clock-face">
+      <!-- الأرقام -->
+      <div id="num12" class="number">12</div>
+      <div id="num3" class="number">3</div>
+      <div id="num6" class="number">6</div>
+      <div id="num9" class="number">9</div>
+    </div>
 
-    <!-- أرقام الساعة (12, 3, 6, 9) -->
-    <div id="num12" class="clock-number">12</div>
-    <div id="num3" class="clock-number">3</div>
-    <div id="num6" class="clock-number">6</div>
-    <div id="num9" class="clock-number">9</div>
-
-    <!-- حاوية العقارب -->
+    <!-- العقارب والنقطة المركزية -->
     <div class="hands-container">
       <div class="center-dot"></div>
       <div id="hour-hand" class="hand"></div>
@@ -206,93 +192,82 @@
     </div>
   </div>
 
-  <!-- العنوان مع اسم المدينة -->
   <div class="title">🕌 آذان المغرب - القرارم قوقة</div>
-
   <div class="countbox">
     <div class="time" id="count">00:00:00</div>
     <div class="finished-message" id="finishedMsg">🔔 حان وقت المغرب</div>
   </div>
-
 </div>
 
 <script>
   (function() {
-    // --- عناصر العقارب ---
+    // عناصر العقارب
     const hourHand = document.getElementById('hour-hand');
     const minuteHand = document.getElementById('minute-hand');
     const secondHand = document.getElementById('second-hand');
-
-    // --- عناصر العد التنازلي ---
-    const countElement = document.getElementById('count');
+    const countEl = document.getElementById('count');
     const finishedMsg = document.getElementById('finishedMsg');
 
-    // --- وقت المغرب لمدينة القرارم قوقة (18:21) ---
-    const targetHour = 18;
-    const targetMinute = 21;
-    const targetSecond = 0;
+    // وقت المغرب للقرارم قوقة (18:21)
+    const MAGHRIB_HOUR = 18;
+    const MAGHRIB_MINUTE = 21;
+    const MAGHRIB_SECOND = 0;
 
-    // --- دالة تحديث عقارب الساعة (حركة سلسة) ---
-    function updateClockHands() {
+    // تحديث العقارب (حركة سلسة)
+    function updateHands() {
       const now = new Date();
-      const hours = now.getHours();
-      const minutes = now.getMinutes();
-      const seconds = now.getSeconds();
+      const h = now.getHours();
+      const m = now.getMinutes();
+      const s = now.getSeconds();
       const ms = now.getMilliseconds();
 
       // زوايا العقارب (نضيف 90 درجة لتبدأ من الأعلى)
-      const hourDeg = ((hours % 12) * 30) + (minutes * 0.5) + 90;
-      const minuteDeg = (minutes * 6) + (seconds * 0.1) + 90;
-      const secondDeg = (seconds * 6) + (ms * 0.006) + 90;
+      const hourAngle = ((h % 12) * 30) + (m * 0.5) + 90;
+      const minuteAngle = (m * 6) + (s * 0.1) + 90;
+      const secondAngle = (s * 6) + (ms * 0.006) + 90;
 
-      // تطبيق التدوير
-      hourHand.style.transform = `rotate(${hourDeg}deg)`;
-      minuteHand.style.transform = `rotate(${minuteDeg}deg)`;
-      secondHand.style.transform = `rotate(${secondDeg}deg)`;
+      hourHand.style.transform = `rotate(${hourAngle}deg)`;
+      minuteHand.style.transform = `rotate(${minuteAngle}deg)`;
+      secondHand.style.transform = `rotate(${secondAngle}deg)`;
 
-      // استمرار التحديث
-      requestAnimationFrame(updateClockHands);
+      requestAnimationFrame(updateHands);
     }
 
-    // --- دالة حساب الوقت المتبقي للمغرب ---
-    function getTimeRemaining() {
+    // حساب الوقت المتبقي للمغرب
+    function getRemaining() {
       const now = new Date();
-      let target = new Date();
-      target.setHours(targetHour, targetMinute, targetSecond, 0);
-      if (now > target) {
-        target.setDate(target.getDate() + 1);
-      }
+      const target = new Date();
+      target.setHours(MAGHRIB_HOUR, MAGHRIB_MINUTE, MAGHRIB_SECOND, 0);
+      if (now > target) target.setDate(target.getDate() + 1);
       return target - now;
     }
 
-    // --- دالة تحديث العد التنازلي ---
+    // تحديث العداد التنازلي
     function updateCountdown() {
-      const diff = getTimeRemaining();
-
+      const diff = getRemaining();
       if (diff <= 0) {
-        countElement.style.display = 'none';
+        countEl.style.display = 'none';
         finishedMsg.style.display = 'block';
         setTimeout(() => {
-          countElement.style.display = 'block';
+          countEl.style.display = 'block';
           finishedMsg.style.display = 'none';
         }, 5000);
         return;
       }
-
-      countElement.style.display = 'block';
+      countEl.style.display = 'block';
       finishedMsg.style.display = 'none';
 
       const hours = Math.floor(diff / 3600000);
-      const minutes = Math.floor((diff % 3600000) / 60000);
-      const seconds = Math.floor((diff % 60000) / 1000);
+      const mins = Math.floor((diff % 3600000) / 60000);
+      const secs = Math.floor((diff % 60000) / 1000);
 
-      countElement.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      countEl.textContent = `${hours.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
     }
 
-    // --- بدء التحديثات ---
-    requestAnimationFrame(updateClockHands);   // حركة العقارب
-    updateCountdown();                          // تحديث فوري للعداد
-    setInterval(updateCountdown, 1000);         // تحديث كل ثانية
+    // تشغيل كل شيء
+    requestAnimationFrame(updateHands);       // حركة مستمرة للعقارب
+    updateCountdown();                         // تحديث فوري للعداد
+    setInterval(updateCountdown, 1000);        // تحديث كل ثانية
   })();
 </script>
 </body>
