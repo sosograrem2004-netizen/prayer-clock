@@ -45,7 +45,7 @@
       margin-top: 5px;
     }
 
-    /* صورة وجه الساعة */
+    /* صورة وجه الساعة (اختيارية) */
     .clock-img {
       width: 100%;
       height: 100%;
@@ -56,7 +56,23 @@
       object-fit: cover;
     }
 
-    /* حاوية العقارب - تغطي كامل مساحة الساعة */
+    /* أرقام الساعة (12, 3, 6, 9) */
+    .clock-number {
+      position: absolute;
+      font-family: 'Cairo', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: #ecf0f1;
+      text-shadow: 0 0 8px #3498db;
+      transform: translate(-50%, -50%);
+      z-index: 6;
+    }
+    #num12 { top: 8%; left: 50%; }
+    #num3  { top: 50%; left: 92%; }
+    #num6  { top: 92%; left: 50%; }
+    #num9  { top: 50%; left: 8%; }
+
+    /* حاوية العقارب */
     .hands-container {
       position: absolute;
       top: 0;
@@ -84,37 +100,35 @@
     .hand {
       position: absolute;
       left: 50%;
-      bottom: 50%; /* نقطة الارتكاز أسفل العقرب */
-      transform-origin: 50% 100%; /* الارتكاز عند المنتصف من الأسفل */
+      bottom: 50%;
+      transform-origin: 50% 100%;
       border-radius: 30px;
-      box-shadow: 0 0 8px currentColor;
-      transform: rotate(0deg); /* يتم تحديثها عبر JS */
+      box-shadow: 0 0 8px rgba(0,0,0,0.8);
+      transform: rotate(0deg);
     }
 
-    /* عقرب الساعات */
+    /* عقرب الساعات (أسود قاتم) */
     #hour-hand {
       width: 8px;
       height: 25%;
-      background: #f1c40f;
-      color: #f1c40f;
+      background: #111;
       z-index: 7;
     }
 
-    /* عقرب الدقائق */
+    /* عقرب الدقائق (أسود قاتم) */
     #minute-hand {
       width: 6px;
       height: 35%;
-      background: #f1c40f;
-      color: #f1c40f;
+      background: #111;
       z-index: 8;
     }
 
-    /* عقرب الثواني */
+    /* عقرب الثواني (أحمر قوي) */
     #second-hand {
       width: 3px;
       height: 40%;
-      background: #e74c3c;
-      color: #e74c3c;
+      background: #ff0000;
+      box-shadow: 0 0 12px #ff0000;
       z-index: 9;
     }
 
@@ -161,6 +175,7 @@
     @media (max-width: 480px) {
       .title { font-size: 18px; }
       .countbox .time { font-size: 36px; }
+      .clock-number { font-size: 18px; }
       #hour-hand { width: 6px; }
       #minute-hand { width: 4px; }
       #second-hand { width: 2px; }
@@ -173,14 +188,18 @@
 
   <!-- الساعة التناظرية -->
   <div class="clock-box">
-    <!-- صورة وجه الساعة -->
+    <!-- صورة وجه الساعة (اختيارية) -->
     <img src="background.jpg.png" alt="وجه الساعة" class="clock-img" onerror="this.style.background='#1e2a3a'; this.src='';">
 
-    <!-- حاوية العقارب (تملأ كامل مساحة الساعة) -->
+    <!-- أرقام الساعة (12, 3, 6, 9) -->
+    <div id="num12" class="clock-number">12</div>
+    <div id="num3" class="clock-number">3</div>
+    <div id="num6" class="clock-number">6</div>
+    <div id="num9" class="clock-number">9</div>
+
+    <!-- حاوية العقارب -->
     <div class="hands-container">
-      <!-- نقطة المركز (تظهر فوق العقارب) -->
       <div class="center-dot"></div>
-      <!-- العقارب -->
       <div id="hour-hand" class="hand"></div>
       <div id="minute-hand" class="hand"></div>
       <div id="second-hand" class="hand"></div>
