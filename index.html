@@ -42,7 +42,7 @@ body{
   border-radius:10px;
 }
 
-/* مركز العقارب في منتصف اللوغو */
+/* مركز العقارب داخل اللوغو */
 .center{
   position:absolute;
   left:50%;
@@ -50,7 +50,7 @@ body{
   transform:translate(-50%,-50%);
 }
 
-/* العقارب */
+/* العقارب داخل اللوغو ولا تتجاوز المحيط */
 .hand{
   position:absolute;
   left:0;
@@ -58,23 +58,23 @@ body{
   transform-origin:0% 50%;
 }
 
-/* عقرب الساعة بحجم كبير */
+/* عقرب الساعة */
 #h{
-  width:180px;   /* تقريبًا نصف قطر اللوغو */
-  height:6px;
+  width:90px;   /* نصف أصغر من نصف قطر اللوغو */
+  height:5px;
   background:black;
 }
 
-/* عقرب الدقيقة بحجم كبير */
+/* عقرب الدقيقة */
 #m{
-  width:220px;
-  height:4px;
+  width:120px;
+  height:3px;
   background:black;
 }
 
-/* عقرب الثانية بحجم كبير */
+/* عقرب الثانية */
 #s{
-  width:250px;
+  width:140px;
   height:2px;
   background:red;
 }
