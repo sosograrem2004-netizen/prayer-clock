@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ساعة الصلاة - المغرب</title>
+  <title>ساعة الصلاة - القرارم قوقة</title>
 
   <!-- الخطوط -->
   <link href="https://fonts.cdnfonts.com/css/digital-7" rel="stylesheet">
@@ -53,17 +53,7 @@
       border-radius: 50%;
       background: #1e2a3a; /* لون خلفية داكن */
       box-shadow: 0 0 0 4px #2c3e50, 0 10px 20px rgba(0,0,0,0.8);
-      /* إذا أردت إضافة أرقام بشكل CSS يمكن إضافتها هنا */
       object-fit: cover; /* لتغطية الصورة إن وجدت */
-    }
-
-    /* في حال عدم وجود صورة، نرسم بعض التفاصيل البسيطة */
-    .clock-img:after {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: transparent;
     }
 
     /* النقطة المركزية */
@@ -151,41 +141,6 @@
       display: none;
     }
 
-    /* حقل اختيار وقت المغرب */
-    .time-picker {
-      margin-top: 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: #1e2a3a;
-      padding: 10px 18px;
-      border-radius: 50px;
-      border: 1px solid #3a4a5a;
-    }
-
-    .time-picker label {
-      color: #b0c4de;
-      font-size: 16px;
-    }
-
-    .time-picker input[type="time"] {
-      background: #0f1a24;
-      border: 1px solid #f1c40f;
-      color: #f1c40f;
-      font-family: 'Digital-7 Mono', monospace;
-      font-size: 20px;
-      padding: 5px 10px;
-      border-radius: 30px;
-      outline: none;
-      direction: ltr; /* لكي يظهر التنسيق بشكل صحيح */
-    }
-
-    .time-picker input[type="time"]::-webkit-calendar-picker-indicator {
-      filter: invert(1);
-      opacity: 0.7;
-      cursor: pointer;
-    }
-
     /* تحسينات للأجهزة الصغيرة */
     @media (max-width: 480px) {
       .title { font-size: 18px; }
@@ -215,18 +170,12 @@
     </div>
   </div>
 
-  <!-- العنوان والعداد -->
-  <div class="title">🕋 آذان المغرب بعد:</div>
+  <!-- العنوان والعداد مع اسم المدينة -->
+  <div class="title">🕌 آذان المغرب - القرارم قوقة</div>
 
   <div class="countbox">
     <div class="time" id="count">00:00:00</div>
     <div class="finished-message" id="finishedMsg">🔔 حان وقت المغرب</div>
-  </div>
-
-  <!-- اختيار وقت المغرب (يمكن إضافته أو إخفاؤه) -->
-  <div class="time-picker">
-    <label for="maghribTime">وقت المغرب:</label>
-    <input type="time" id="maghribTime" value="18:45">
   </div>
 
 </div>
@@ -239,30 +188,12 @@
     const secondHand = document.getElementById('s');
     const countElement = document.getElementById('count');
     const finishedMsg = document.getElementById('finishedMsg');
-    const maghribInput = document.getElementById('maghribTime');
 
-    // --- متغيرات لتخزين وقت المغرب (يتم تحديثها عند تغيير input) ---
-    let targetHour = 18;
-    let targetMinute = 45;
-    let targetSecond = 0;   // ثابت
-
-    // دالة تحديث وقت المغرب من حقل الإدخال
-    function updateTargetTimeFromInput() {
-      const timeStr = maghribInput.value; // format "HH:MM"
-      if (timeStr) {
-        const parts = timeStr.split(':');
-        targetHour = parseInt(parts[0], 10);
-        targetMinute = parseInt(parts[1], 10);
-      }
-    }
-
-    // استدعاء عند تغيير الوقت
-    maghribInput.addEventListener('change', function() {
-      updateTargetTimeFromInput();
-    });
-
-    // تحديث أولي
-    updateTargetTimeFromInput();
+    // --- وقت المغرب لمدينة القرارم قوقة (ولاية ميلة، الجزائر) ---
+    // تم تثبيت الوقت حسب المصادر: 6:21 مساءً [citation:1][citation:2][citation:8]
+    const targetHour = 18;    // 6 مساءً
+    const targetMinute = 21;  // 21 دقيقة
+    const targetSecond = 0;   // ثابت
 
     // --- دالة حساب الوقت المتبقي للمغرب ---
     function getTimeRemaining() {
@@ -288,10 +219,7 @@
         // انتهاء الوقت: إظهار رسالة وإخفاء الأرقام
         countElement.style.display = 'none';
         finishedMsg.style.display = 'block';
-        // نعيد تعيين target لليوم التالي بعد فترة وجيزة (اختياري)
-        // لكننا سنتركه يظهر الرسالة لمدة دقيقة مثلاً ثم يعود للعد التنازلي التالي
-        // يمكن إعادة ضبط target تلقائياً عندما يصبح الفرق > 0
-        // هنا سنعيد تفعيل الأرقام بعد 5 ثوانٍ (اختياري)
+        // نعيد تعيين target لليوم التالي بعد فترة وجيزة
         setTimeout(() => {
           countElement.style.display = 'block';
           finishedMsg.style.display = 'none';
@@ -338,16 +266,9 @@
     // 2. تحديث العد التنازلي كل ثانية (مع تصحيح millisecond)
     function startCountdownInterval() {
       updateCountdown(); // فوري
-      const interval = setInterval(updateCountdown, 1000);
-      return interval;
+      setInterval(updateCountdown, 1000);
     }
     startCountdownInterval();
-
-    // 3. التأكد من تحديث العد التنازلي فور تغيير وقت المغرب
-    maghribInput.addEventListener('input', function() {
-      updateTargetTimeFromInput();
-      updateCountdown(); // تحديث فوري عند تغيير الوقت
-    });
 
   })();
 </script>
