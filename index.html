@@ -5,9 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ساعة الصلاة</title>
 
-<!-- خط الأرقام -->
 <link href="https://fonts.cdnfonts.com/css/digital-7" rel="stylesheet">
-<!-- خط Cairo -->
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -29,7 +27,6 @@ body{
   align-items:center;
 }
 
-/* تصغير اللوغو */
 .clock-box{
   position:relative;
   width:70%;
@@ -45,7 +42,6 @@ body{
   border-radius:10px;
 }
 
-/* مركز العقارب */
 .center{
   position:absolute;
   left:50%;
@@ -53,7 +49,6 @@ body{
   transform:translate(-50%,-50%);
 }
 
-/* العقارب */
 .hand{
   position:absolute;
   left:0;
@@ -61,23 +56,9 @@ body{
   transform-origin:0% 50%;
 }
 
-#h{
-  width:60px;
-  height:4px;
-  background:black;
-}
-
-#m{
-  width:85px;
-  height:3px;
-  background:black;
-}
-
-#s{
-  width:100px;
-  height:2px;
-  background:red;
-}
+#h{ width:60px; height:4px; background:black; }
+#m{ width:85px; height:3px; background:black; }
+#s{ width:100px; height:2px; background:red; }
 
 .title{
   margin-top:14px;
@@ -129,48 +110,49 @@ body{
 </div>
 
 <script>
-function tick(){
-  const now = new Date(); // يأخذ التوقيت مباشرة من الهاتف
+/* مزامنة دقيقة مع ساعة الهاتف */
+function updateClock(){
 
-  /* مزامنة الساعة مع الهاتف بدقة */
-  let hours = now.getHours();
-  let minutes = now.getMinutes();
-  let seconds = now.getSeconds();
-  let milliseconds = now.getMilliseconds();
+  const now = new Date();
 
-  let hourDeg = (hours % 12) * 30 + minutes * 0.5;
-  let minuteDeg = minutes * 6 + seconds * 0.1;
-  let secondDeg = seconds * 6 + milliseconds * 0.006;
+  const hours = now.getHours();
+  const minutes = now.getMinutes();
+  const seconds = now.getSeconds();
+  const ms = now.getMilliseconds();
 
-  document.getElementById("h").style.transform = "rotate(" + hourDeg + "deg)";
-  document.getElementById("m").style.transform = "rotate(" + minuteDeg + "deg)";
-  document.getElementById("s").style.transform = "rotate(" + secondDeg + "deg)";
+  const hourDeg = (hours % 12) * 30 + minutes * 0.5;
+  const minuteDeg = minutes * 6 + seconds * 0.1;
+  const secondDeg = seconds * 6 + ms * 0.006;
+
+  document.getElementById("h").style.transform = `rotate(${hourDeg}deg)`;
+  document.getElementById("m").style.transform = `rotate(${minuteDeg}deg)`;
+  document.getElementById("s").style.transform = `rotate(${secondDeg}deg)`;
 
   /* العد التنازلي */
   let target = new Date();
-  target.setHours(18);
-  target.setMinutes(45);
-  target.setSeconds(0);
-  target.setMilliseconds(0);
+  target.setHours(18,45,0,0); // عدل وقت المغرب حسب مدينتك
 
-  if(now > target) target.setDate(target.getDate()+1);
+  if(now > target){
+    target.setDate(target.getDate() + 1);
+  }
 
-  let diff = target - now;
+  const diff = target - now;
 
-  let hh = Math.floor(diff/1000/60/60);
-  let mm = Math.floor(diff/1000/60)%60;
-  let ss = Math.floor(diff/1000)%60;
+  const hh = String(Math.floor(diff / 3600000)).padStart(2,'0');
+  const mm = String(Math.floor(diff % 3600000 / 60000)).padStart(2,'0');
+  const ss = String(Math.floor(diff % 60000 / 1000)).padStart(2,'0');
 
-  hh = hh.toString().padStart(2,'0');
-  mm = mm.toString().padStart(2,'0');
-  ss = ss.toString().padStart(2,'0');
-
-  document.getElementById("count").innerHTML = hh + ":" + mm + ":" + ss;
+  document.getElementById("count").innerHTML = `${hh}:${mm}:${ss}`;
 }
 
-/* تحديث كل 100 مللي ثانية لدقة أفضل */
-setInterval(tick,100);
-tick();
+/* تحديث متزامن مع كل ثانية حقيقية */
+function syncToSecond(){
+  updateClock();
+  const delay = 1000 - new Date().getMilliseconds();
+  setTimeout(syncToSecond, delay);
+}
+
+syncToSecond();
 </script>
 
 </body>
