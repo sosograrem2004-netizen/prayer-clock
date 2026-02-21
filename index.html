@@ -15,7 +15,7 @@
     }
 
     body {
-      background: #0a0f1e; /* لون داكن عميق */
+      background: #0a0f1e;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -45,22 +45,32 @@
       margin-top: 5px;
     }
 
-    /* صورة وجه الساعة (يمكن استبدالها) */
+    /* صورة وجه الساعة */
     .clock-img {
       width: 100%;
       height: 100%;
       display: block;
       border-radius: 50%;
-      background: #1e2a3a; /* لون خلفية داكن */
+      background: #1e2a3a; /* خلفية احتياطية */
       box-shadow: 0 0 0 4px #2c3e50, 0 10px 20px rgba(0,0,0,0.8);
-      object-fit: cover; /* لتغطية الصورة إن وجدت */
+      object-fit: cover;
     }
 
-    /* النقطة المركزية */
-    .center {
+    /* حاوية العقارب - تغطي كامل مساحة الساعة */
+    .hands-container {
       position: absolute;
-      left: 50%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 5;
+    }
+
+    /* نقطة المركز */
+    .center-dot {
+      position: absolute;
       top: 50%;
+      left: 50%;
       transform: translate(-50%, -50%);
       width: 4%;
       height: 4%;
@@ -70,35 +80,42 @@
       box-shadow: 0 0 10px #ffaa00;
     }
 
-    /* العقارب - مشتركة */
+    /* العقارب - جميعها تتمركز في نفس النقطة */
     .hand {
       position: absolute;
-      left: 50%;       /* نضع نقطة الارتكاز عند 50% أفقياً */
-      bottom: 50%;      /* والجزء السفلي عند 50% ليكون الارتكاز في منتصف العقرب تقريباً */
-      transform-origin: 50% 100%; /* نقطة الارتكاز أسفل المنتصف (مكان المسمار) */
-      background: linear-gradient(to top, #f1c40f, #f39c12);
+      left: 50%;
+      bottom: 50%; /* نقطة الارتكاز أسفل العقرب */
+      transform-origin: 50% 100%; /* الارتكاز عند المنتصف من الأسفل */
       border-radius: 30px;
-      box-shadow: 0 0 5px rgba(255,215,0,0.8);
-      transition: background 0.2s;
-      transform: rotate(0deg); /* يتم التعديل عبر JS */
+      box-shadow: 0 0 8px currentColor;
+      transform: rotate(0deg); /* يتم تحديثها عبر JS */
     }
 
-    /* أطوال العقارب نسبة إلى عرض الحاوية */
-    #h {
-      width: 6px;
-      height: 25%;      /* 25% من ارتفاع الحاوية */
+    /* عقرب الساعات */
+    #hour-hand {
+      width: 8px;
+      height: 25%;
       background: #f1c40f;
+      color: #f1c40f;
+      z-index: 7;
     }
-    #m {
-      width: 4px;
+
+    /* عقرب الدقائق */
+    #minute-hand {
+      width: 6px;
       height: 35%;
       background: #f1c40f;
+      color: #f1c40f;
+      z-index: 8;
     }
-    #s {
-      width: 2px;
+
+    /* عقرب الثواني */
+    #second-hand {
+      width: 3px;
       height: 40%;
       background: #e74c3c;
-      box-shadow: 0 0 10px #e74c3c;
+      color: #e74c3c;
+      z-index: 9;
     }
 
     /* العنوان */
@@ -141,14 +158,12 @@
       display: none;
     }
 
-    /* تحسينات للأجهزة الصغيرة */
     @media (max-width: 480px) {
       .title { font-size: 18px; }
       .countbox .time { font-size: 36px; }
-      .hand { border-radius: 10px; }
-      #h { width: 4px; }
-      #m { width: 3px; }
-      #s { width: 2px; }
+      #hour-hand { width: 6px; }
+      #minute-hand { width: 4px; }
+      #second-hand { width: 2px; }
     }
   </style>
 </head>
@@ -158,19 +173,21 @@
 
   <!-- الساعة التناظرية -->
   <div class="clock-box">
-    <!-- صورة وجه الساعة (يمكنك استبدالها بصورتك الخاصة) -->
-    <img src="background.jpg.png" alt="وجه الساعة" class="clock-img" onerror="this.style.background='#1e2a3a'; this.src=''; this.alt='';">
+    <!-- صورة وجه الساعة -->
+    <img src="background.jpg.png" alt="وجه الساعة" class="clock-img" onerror="this.style.background='#1e2a3a'; this.src='';">
 
-    <!-- نقطة المركز التي تثبت عليها العقارب -->
-    <div class="center">
-      <!-- العقارب ستوضع هنا (نسبياً) -->
-      <div id="h" class="hand"></div>
-      <div id="m" class="hand"></div>
-      <div id="s" class="hand"></div>
+    <!-- حاوية العقارب (تملأ كامل مساحة الساعة) -->
+    <div class="hands-container">
+      <!-- نقطة المركز (تظهر فوق العقارب) -->
+      <div class="center-dot"></div>
+      <!-- العقارب -->
+      <div id="hour-hand" class="hand"></div>
+      <div id="minute-hand" class="hand"></div>
+      <div id="second-hand" class="hand"></div>
     </div>
   </div>
 
-  <!-- العنوان والعداد مع اسم المدينة -->
+  <!-- العنوان مع اسم المدينة -->
   <div class="title">🕌 آذان المغرب - القرارم قوقة</div>
 
   <div class="countbox">
@@ -182,61 +199,19 @@
 
 <script>
   (function() {
-    // --- عناصر ثابتة ---
-    const hourHand = document.getElementById('h');
-    const minuteHand = document.getElementById('m');
-    const secondHand = document.getElementById('s');
+    // --- عناصر العقارب ---
+    const hourHand = document.getElementById('hour-hand');
+    const minuteHand = document.getElementById('minute-hand');
+    const secondHand = document.getElementById('second-hand');
+
+    // --- عناصر العد التنازلي ---
     const countElement = document.getElementById('count');
     const finishedMsg = document.getElementById('finishedMsg');
 
-    // --- وقت المغرب لمدينة القرارم قوقة (ولاية ميلة، الجزائر) ---
-    // تم تثبيت الوقت حسب المصادر: 6:21 مساءً [citation:1][citation:2][citation:8]
-    const targetHour = 18;    // 6 مساءً
-    const targetMinute = 21;  // 21 دقيقة
-    const targetSecond = 0;   // ثابت
-
-    // --- دالة حساب الوقت المتبقي للمغرب ---
-    function getTimeRemaining() {
-      const now = new Date();
-
-      // إنشاء target time لليوم الحالي
-      let target = new Date();
-      target.setHours(targetHour, targetMinute, targetSecond, 0);
-
-      // إذا كان الوقت الحالي بعد target، نضيف يوماً
-      if (now > target) {
-        target.setDate(target.getDate() + 1);
-      }
-
-      return target - now;
-    }
-
-    // --- دالة تحديث العد التنازلي (تستدعى كل ثانية) ---
-    function updateCountdown() {
-      const diff = getTimeRemaining();
-
-      if (diff <= 0) {
-        // انتهاء الوقت: إظهار رسالة وإخفاء الأرقام
-        countElement.style.display = 'none';
-        finishedMsg.style.display = 'block';
-        // نعيد تعيين target لليوم التالي بعد فترة وجيزة
-        setTimeout(() => {
-          countElement.style.display = 'block';
-          finishedMsg.style.display = 'none';
-        }, 5000);
-        return;
-      }
-
-      // إظهار العدادات
-      countElement.style.display = 'block';
-      finishedMsg.style.display = 'none';
-
-      const hours = Math.floor(diff / 3600000);
-      const minutes = Math.floor((diff % 3600000) / 60000);
-      const seconds = Math.floor((diff % 60000) / 1000);
-
-      countElement.innerHTML = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    }
+    // --- وقت المغرب لمدينة القرارم قوقة (18:21) ---
+    const targetHour = 18;
+    const targetMinute = 21;
+    const targetSecond = 0;
 
     // --- دالة تحديث عقارب الساعة (حركة سلسة) ---
     function updateClockHands() {
@@ -246,30 +221,59 @@
       const seconds = now.getSeconds();
       const ms = now.getMilliseconds();
 
-      // حساب الزوايا مع إضافة 90 درجة لجعل العقرب يشير للأعلى عند 12
+      // زوايا العقارب (نضيف 90 درجة لتبدأ من الأعلى)
       const hourDeg = ((hours % 12) * 30) + (minutes * 0.5) + 90;
       const minuteDeg = (minutes * 6) + (seconds * 0.1) + 90;
       const secondDeg = (seconds * 6) + (ms * 0.006) + 90;
 
+      // تطبيق التدوير
       hourHand.style.transform = `rotate(${hourDeg}deg)`;
       minuteHand.style.transform = `rotate(${minuteDeg}deg)`;
       secondHand.style.transform = `rotate(${secondDeg}deg)`;
 
-      // استمرار التحديث السلس
+      // استمرار التحديث
       requestAnimationFrame(updateClockHands);
     }
 
-    // --- دورة حياة التحديثات ---
-    // 1. تشغيل حركة العقارب (باستخدام requestAnimationFrame)
-    requestAnimationFrame(updateClockHands);
-
-    // 2. تحديث العد التنازلي كل ثانية (مع تصحيح millisecond)
-    function startCountdownInterval() {
-      updateCountdown(); // فوري
-      setInterval(updateCountdown, 1000);
+    // --- دالة حساب الوقت المتبقي للمغرب ---
+    function getTimeRemaining() {
+      const now = new Date();
+      let target = new Date();
+      target.setHours(targetHour, targetMinute, targetSecond, 0);
+      if (now > target) {
+        target.setDate(target.getDate() + 1);
+      }
+      return target - now;
     }
-    startCountdownInterval();
 
+    // --- دالة تحديث العد التنازلي ---
+    function updateCountdown() {
+      const diff = getTimeRemaining();
+
+      if (diff <= 0) {
+        countElement.style.display = 'none';
+        finishedMsg.style.display = 'block';
+        setTimeout(() => {
+          countElement.style.display = 'block';
+          finishedMsg.style.display = 'none';
+        }, 5000);
+        return;
+      }
+
+      countElement.style.display = 'block';
+      finishedMsg.style.display = 'none';
+
+      const hours = Math.floor(diff / 3600000);
+      const minutes = Math.floor((diff % 3600000) / 60000);
+      const seconds = Math.floor((diff % 60000) / 1000);
+
+      countElement.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    // --- بدء التحديثات ---
+    requestAnimationFrame(updateClockHands);   // حركة العقارب
+    updateCountdown();                          // تحديث فوري للعداد
+    setInterval(updateCountdown, 1000);         // تحديث كل ثانية
   })();
 </script>
 </body>
